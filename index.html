@@ -8,6 +8,11 @@
       name="description"
       content="Pirulito: postres por porción para compartir. Hacemos envíos por WhatsApp a CABA y GBA."
     />
+    <meta property="og:title" content="Pirulito · Postres que se sienten como un abrazo" />
+    <meta property="og:description" content="Postres por porción, pedidos por WhatsApp con envíos en CABA y GBA." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&amp;fit=crop&amp;w=1100&amp;q=85" />
+    <meta name="twitter:card" content="summary_large_image" />
     <title>Pirulito · Postres que se sienten como un abrazo</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -20,9 +25,14 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23e77d78'/%3E%3Cpath d='M18 39c0-10 6-17 14-17s14 7 14 17c0 8-6 13-14 13s-14-5-14-13Z' fill='%23fff8f1'/%3E%3Ccircle cx='46' cy='16' r='5' fill='%23732c43'/%3E%3C/svg%3E"
     />
     <link rel="stylesheet" href="styles.css" />
+    <script>document.documentElement.classList.add("js");</script>
   </head>
   <body>
     <div class="page-wash" aria-hidden="true"></div>
+
+    <noscript>
+      <p class="noscript-note">Para pedir sin JavaScript: <a href="https://wa.me/5491138569142" target="_blank" rel="noreferrer">escribinos por WhatsApp</a>.</p>
+    </noscript>
 
     <header class="site-header" id="top">
       <div class="container header-inner">
@@ -48,7 +58,6 @@
           <a href="#contacto">Contacto</a>
           <a
             class="nav-whatsapp"
-            href="https://wa.me/5491138569142?text=Hola%20Pirulito%21%20Quiero%20hacer%20un%20pedido%20%F0%9F%8D%B0"
             target="_blank"
             rel="noreferrer"
             data-whatsapp="general"
@@ -74,7 +83,6 @@
             <div class="hero-actions">
               <a
                 class="button button-primary"
-                href="https://wa.me/5491138569142?text=Hola%20Pirulito%21%20Quiero%20hacer%20un%20pedido%20%F0%9F%8D%B0"
                 target="_blank"
                 rel="noreferrer"
                 data-whatsapp="general"
@@ -95,7 +103,7 @@
           <div class="hero-visual reveal reveal-delay-1">
             <div class="hero-image-wrap">
               <img
-                src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&amp;fit=crop&amp;w=1100&amp;q=88"
+                src="https://images.unsplash.com/photo-1551024506-0bccd828d307?auto=format&amp;fit=crop&amp;w=1100&amp;q=88"
                 alt="Postre de chocolate decorado en una mesa"
               />
               <div class="image-tint" aria-hidden="true"></div>
@@ -122,7 +130,7 @@
           </div>
           <div class="quick-info-item">
             <span class="quick-info-icon" aria-hidden="true">⌁</span>
-            <span><strong>Envío gratis</strong><small>En CABA y GBA</small></span>
+            <span><strong>Envío gratis</strong><small>CABA y GBA · mín. $100.000</small></span>
           </div>
           <div class="quick-info-item">
             <span class="quick-info-icon" aria-hidden="true">◷</span>
@@ -140,14 +148,14 @@
           <div class="about-gallery reveal">
             <div class="gallery-main">
               <img
-                src="https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
-                alt="Porción de pastel con decoración"
+                src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                alt="Torta casera con capas de crema"
                 loading="lazy"
               />
             </div>
             <div class="gallery-small">
               <img
-                src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&amp;fit=crop&amp;w=600&amp;q=85"
+                src="https://images.unsplash.com/photo-1571115177098-24ec42ed204d?auto=format&amp;fit=crop&amp;w=600&amp;q=85"
                 alt="Postre cremoso servido en un plato"
                 loading="lazy"
               />
@@ -183,12 +191,13 @@
             </div>
             <span class="price-note"><span class="tiny-dot"></span> Precios vigentes · pueden cambiar</span>
           </div>
+          <p class="visually-hidden" role="status" id="filter-status"></p>
 
           <div class="product-grid">
             <article class="product-card reveal" data-category="chocolate">
               <div class="product-image">
                 <img
-                  src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                  src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&amp;fit=crop&amp;w=600&amp;q=85"
                   alt="Chocotorta de chocolate en una porción"
                   loading="lazy"
                 />
@@ -198,12 +207,11 @@
               <div class="product-body">
                 <div class="product-meta"><span>Chocolate</span><span>Porción individual</span></div>
                 <h3>Chocotorta</h3>
-                <p>Capas de chocolate, bizcocho húmedo y una cremosidad que invita a darle otro bocado.</p>
+                <p>Galletitas de chocolate, dulce de leche y una cremosidad que invita a darle otro bocado.</p>
                 <div class="product-footer">
                   <span class="product-price" data-price="3000">$3.000</span>
                   <a
                     class="product-order"
-                    href="https://wa.me/5491138569142?text=Hola%20Pirulito%21%20Quiero%20pedir%20Chocotorta%20%F0%9F%8D%B0"
                     target="_blank"
                     rel="noreferrer"
                     data-product="Chocotorta"
@@ -216,7 +224,7 @@
             <article class="product-card reveal reveal-delay-1" data-category="citrico">
               <div class="product-image">
                 <img
-                  src="https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                  src="https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&amp;fit=crop&amp;w=600&amp;q=85"
                   alt="Lemon pie recién servido"
                   loading="lazy"
                 />
@@ -231,7 +239,6 @@
                   <span class="product-price" data-price="3000">$3.000</span>
                   <a
                     class="product-order"
-                    href="https://wa.me/5491138569142?text=Hola%20Pirulito%21%20Quiero%20pedir%20Lemon%20Pie%20%F0%9F%8D%B0"
                     target="_blank"
                     rel="noreferrer"
                     data-product="Lemon Pie"
@@ -244,7 +251,7 @@
             <article class="product-card reveal reveal-delay-2" data-category="cremoso">
               <div class="product-image">
                 <img
-                  src="https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                  src="https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&amp;fit=crop&amp;w=600&amp;q=85"
                   alt="Cheesecake cremoso decorado"
                   loading="lazy"
                 />
@@ -259,7 +266,6 @@
                   <span class="product-price" data-price="3000">$3.000</span>
                   <a
                     class="product-order"
-                    href="https://wa.me/5491138569142?text=Hola%20Pirulito%21%20Quiero%20pedir%20Cheesecake%20%F0%9F%8D%B0"
                     target="_blank"
                     rel="noreferrer"
                     data-product="Cheesecake"
@@ -272,7 +278,7 @@
             <article class="product-card reveal reveal-delay-3" data-category="cremoso">
               <div class="product-image">
                 <img
-                  src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&amp;fit=crop&amp;w=900&amp;q=85"
+                  src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&amp;fit=crop&amp;w=600&amp;q=85"
                   alt="Tiramisú de café con cacao"
                   loading="lazy"
                 />
@@ -287,7 +293,6 @@
                   <span class="product-price" data-price="3000">$3.000</span>
                   <a
                     class="product-order"
-                    href="https://wa.me/5491138569142?text=Hola%20Pirulito%21%20Quiero%20pedir%20Tiramis%C3%BA%20%F0%9F%8D%B0"
                     target="_blank"
                     rel="noreferrer"
                     data-product="Tiramisú"
@@ -308,7 +313,6 @@
             <p>Sin formularios eternos ni vueltas. Escribinos, elegí tus favoritos y nos ocupamos del resto.</p>
             <a
               class="button button-light"
-              href="https://wa.me/5491138569142?text=Hola%20Pirulito%21%20Quiero%20hacer%20un%20pedido%20%F0%9F%8D%B0"
               target="_blank"
               rel="noreferrer"
               data-whatsapp="general"
@@ -340,7 +344,6 @@
               <p>Escribinos para consultar disponibilidad, entregas o hacer tu pedido. Estamos para ayudarte.</p>
               <a
                 class="button button-primary"
-                href="https://wa.me/5491138569142?text=Hola%20Pirulito%21%20Quiero%20consultar%20por%20un%20pedido%20%F0%9F%8D%B0"
                 target="_blank"
                 rel="noreferrer"
                 data-whatsapp="general"
@@ -360,7 +363,7 @@
                 <svg viewBox="0 0 24 24"><path d="M20.5 3.5A11.8 11.8 0 0 0 12.1 0C5.6 0 .3 5.3.3 11.8c0 2.1.6 4.2 1.6 6L.2 24l6.4-1.7a11.8 11.8 0 0 0 5.5 1.4h.1c6.5 0 11.8-5.3 11.8-11.8 0-3.1-1.3-6.1-3.5-8.4Zm-8.4 18.2h-.1a9.7 9.7 0 0 1-5-1.4l-.4-.2-3.8 1 1-3.7-.3-.4a9.7 9.7 0 0 1-1.5-5.2c0-5.4 4.4-9.8 9.8-9.8 2.6 0 5.1 1 7 2.9a9.8 9.8 0 0 1 2.9 7c0 5.4-4.4 9.8-9.7 9.8Zm5.4-7.3c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.7.1-1.8-.9-3-1.6-4.2-3.6-.3-.6.3-.6.8-1.8.1-.2 0-.4 0-.6 0-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.8s1.2 3.2 1.4 3.5c.2.3 2.4 3.7 5.9 5.2 2.3 1 3.3 1.1 4.4 1 1.4-.1 1.8-.8 2.1-1.5.3-.7.3-1.3.2-1.4-.1-.2-.3-.3-.6-.4Z" /></svg>
               </span>
               <span class="detail-label">WhatsApp</span>
-              <a href="https://wa.me/5491138569142" target="_blank" rel="noreferrer">+54 9 11 3856-9142</a>
+              <a target="_blank" rel="noreferrer" data-whatsapp="general">+54 9 11 3856-9142</a>
               <small>La forma más rápida de pedir</small>
             </div>
             <div class="detail-card reveal reveal-delay-1">
@@ -378,7 +381,7 @@
             <div class="detail-card reveal reveal-delay-3">
               <span class="detail-icon" aria-hidden="true">♡</span>
               <span class="detail-label">Formas de pago</span>
-              <strong>Transferencia · Efectivo · MP</strong>
+              <strong>Transferencia · Efectivo · Mercado Pago</strong>
               <small>Coordinamos los detalles por chat</small>
             </div>
           </div>
@@ -420,7 +423,6 @@
 
     <a
       class="floating-whatsapp"
-      href="https://wa.me/5491138569142?text=Hola%20Pirulito%21%20Quiero%20hacer%20un%20pedido%20%F0%9F%8D%B0"
       target="_blank"
       rel="noreferrer"
       data-whatsapp="general"

@@ -1,25 +1,41 @@
 document.documentElement.classList.add("js");
 
-const whatsappNumber = "5491138569142";
-const defaultWhatsappMessage =
-  "¡Hola! Quiero hacer un pedido en Pirulito 🍰";
+/* ------------------------------------------------------------------ *
+ * Configuración central
+ * ------------------------------------------------------------------ */
 
-function buildWhatsappUrl(message) {
-  return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`;
+// Número de WhatsApp en formato internacional sin "+" (para wa.me).
+const WHATSAPP_NUMBER = "5491138569142";
+
+// Mensaje por defecto al abrir las consultas generales.
+const DEFAULT_MESSAGE = "¡Hola! Quiero hacer un pedido en Pirulito 🍰";
+
+function buildWhatsAppUrl(message) {
+  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
 }
 
+/* ------------------------------------------------------------------ *
+ * Enlaces de WhatsApp
+ * ------------------------------------------------------------------ */
+
+// Enlaces generales (portada, menú, contacto, etc.).
 const generalLinks = document.querySelectorAll('[data-whatsapp="general"]');
 generalLinks.forEach((link) => {
-  link.href = buildWhatsappUrl(defaultWhatsappMessage);
+  link.href = buildWhatsAppUrl(DEFAULT_MESSAGE);
 });
 
+// Enlaces de cada producto (mensaje prearmado con el nombre del postre).
 const productLinks = document.querySelectorAll("[data-product]");
 productLinks.forEach((link) => {
   const product = link.dataset.product;
-  link.href = buildWhatsappUrl(
+  link.href = buildWhatsAppUrl(
     `¡Hola! Quiero pedir ${product} de Pirulito 🍰 ¿Me contás disponibilidad?`,
   );
 });
+
+/* ------------------------------------------------------------------ *
+ * Precios
+ * ------------------------------------------------------------------ */
 
 const prices = document.querySelectorAll("[data-price]");
 const priceFormatter = new Intl.NumberFormat("es-AR", {
@@ -30,6 +46,10 @@ const priceFormatter = new Intl.NumberFormat("es-AR", {
 prices.forEach((price) => {
   price.textContent = priceFormatter.format(Number(price.dataset.price));
 });
+
+/* ------------------------------------------------------------------ *
+ * Menú móvil
+ * ------------------------------------------------------------------ */
 
 const menuToggle = document.querySelector(".menu-toggle");
 const primaryNav = document.querySelector("#primary-nav");
@@ -68,27 +88,83 @@ if (menuToggle && primaryNav) {
   });
 }
 
+/* ------------------------------------------------------------------ *
+ * Catálogo: filtros y contadores automáticos
+ * ------------------------------------------------------------------ */
+
 const filterButtons = document.querySelectorAll("[data-filter]");
 const productCards = document.querySelectorAll(".product-card[data-category]");
+const filterStatus = document.getElementById("filter-status");
+
+function padCount(count) {
+  return String(count).padStart(2, "0");
+}
+
+function updateFilterCounts() {
+  filterButtons.forEach((button) => {
+    const filter = button.dataset.filter;
+    const count =
+      filter === "all"
+        ? productCards.length
+        : document.querySelectorAll(
+            `.product-card[data-category="${filter}"]`,
+          ).length;
+    const counter = button.querySelector("span");
+    if (counter) counter.textContent = padCount(count);
+  });
+}
+
+function getFilterLabel(filter) {
+  const button = document.querySelector(`[data-filter="${filter}"]`);
+  if (!button) return "Todos";
+  return button.textContent.replace(/[0-9]/g, "").trim();
+}
+
+function applyFilter(filter) {
+  productCards.forEach((card) => {
+    const shouldShow = filter === "all" || card.dataset.category === filter;
+    card.classList.toggle("is-hidden", !shouldShow);
+  });
+
+  filterButtons.forEach((button) => {
+    const isActive = button.dataset.filter === filter;
+    button.classList.toggle("is-active", isActive);
+    button.setAttribute("aria-pressed", String(isActive));
+  });
+
+  if (filterStatus) {
+    filterStatus.textContent = `Mostrando: ${getFilterLabel(filter)}.`;
+  }
+}
 
 filterButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const filter = button.dataset.filter;
-    filterButtons.forEach((item) => {
-      const isActive = item === button;
-      item.classList.toggle("is-active", isActive);
-      item.setAttribute("aria-pressed", String(isActive));
-    });
-
-    productCards.forEach((card) => {
-      const shouldShow = filter === "all" || card.dataset.category === filter;
-      card.classList.toggle("is-hidden", !shouldShow);
-    });
-  });
+  button.addEventListener("click", () => applyFilter(button.dataset.filter));
 });
+
+updateFilterCounts();
+
+/* ------------------------------------------------------------------ *
+ * Imágenes: respaldo si una foto no carga
+ * ------------------------------------------------------------------ */
+
+document.querySelectorAll("img").forEach((img) => {
+  img.addEventListener(
+    "error",
+    () => img.classList.add("is-missing"),
+    { once: true },
+  );
+});
+
+/* ------------------------------------------------------------------ *
+ * Año del footer
+ * ------------------------------------------------------------------ */
 
 const year = document.querySelector("[data-year]");
 if (year) year.textContent = new Date().getFullYear();
+
+/* ------------------------------------------------------------------ *
+ * Animaciones de aparición
+ * ------------------------------------------------------------------ */
 
 const revealItems = document.querySelectorAll(".reveal");
 if ("IntersectionObserver" in window) {
