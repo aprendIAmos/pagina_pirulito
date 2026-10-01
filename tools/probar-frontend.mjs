@@ -159,18 +159,22 @@ function enviar(form, window) {
   form.dispatchEvent(new window.Event("submit", { bubbles: true, cancelable: true }));
 }
 
+/**
+ * jsdom no descarga el <link rel="stylesheet"> y su cascada no reproduce la
+ * precedencia entre reglas de autor y la regla [hidden] del navegador, así
+ * que el estilo computado no sirve para verificar nada acá. Lo que sí se
+ * controla es que el atributo hidden se aplique, y que styles.css mantenga
+ * la guarda que hace que ese atributo oculte de verdad (eso vive en
+ * verificar-enlaces.mjs).
+ */
+
 /* ------------------------------------------------------------------ */
 
 seccion("Reinicio de los datos mock");
 // Los datos viven en memoria: la prueba necesita partir del estado inicial
 // para que los saldos y el historial sean predecibles.
 {
-  await consultar(`${BASE}/api/auth/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ usuario: "admin", password: PASSWORD }),
-  });
-  const reinicio = await consultar(`${BASE}/api/admin/reiniciar-datos`, { method: "POST" });
+  const reinicio = await consultar(`${BASE}/api/dev/reiniciar`, { method: "POST" });
   ok("los datos volvieron al estado inicial", reinicio.status === 200, `(${reinicio.status})`);
   cookie = "";
 }
@@ -263,8 +267,6 @@ const cuenta = await montarPagina("cuenta.html", "js/cuenta.js");
   ok("lista 1 promo", document.querySelectorAll("#lista-promos .beneficio").length === 1);
   ok("lista 2 descuentos", document.querySelectorAll("#lista-descuentos .beneficio").length === 2);
   ok("lista 2 cupones", document.querySelectorAll("#lista-cupones .beneficio").length === 2);
-  ok("el panel de admin queda oculto para el cliente",
-    document.getElementById("admin-panel")?.hidden === true);
   ok("el historial de compras arranca vacío",
     document.getElementById("lista-compras")?.textContent?.includes("Todavía no compraste"),
     document.getElementById("lista-compras")?.textContent?.trim());
@@ -286,61 +288,55 @@ seccion("Aplicar un cupón");
     document.getElementById("lista-canjes")?.textContent?.slice(0, 60));
 }
 
-seccion("La API le cierra el panel a la cliente");
+seccion("La API le cierra las rutas de admin a la cliente");
 {
+  // No hay panel en pantalla, pero el backend sigue protegido.
   const respuesta = await consultar(`${BASE}/api/admin/config`);
   ok("/api/admin/config responde 403 para la cliente", respuesta.status === 403,
     `(${respuesta.status})`);
 }
 
-seccion("Admin entra y cambia la regla");
+seccion("El backend de admin sigue vivo, sin pantalla");
 {
-  const { document, window } = cuenta;
-  document.getElementById("logout-button").click();
-  await esperar(600);
-  ok("vuelve al login", document.getElementById("login-panel")?.hidden === false);
+  // El panel se retiró del sitio pero las rutas quedan: la cuenta admin
+  // existe y por eso se prueba que el rol siga funcionando.
+  await consultar(`${BASE}/api/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ usuario: "admin", password: PASSWORD }),
+  });
+  const config = await consultar(`${BASE}/api/admin/config`);
+  ok("el admin entra y lee la regla",
+    config.status === 200 && config.datos?.config?.limite === 10000,
+    JSON.stringify(config.datos?.config));
 
-  document.querySelector('[data-demo="admin"]').click();
-  enviar(document.getElementById("login-form"), window);
-  await esperar(800);
-
-  ok("el panel de admin se muestra", document.getElementById("admin-panel")?.hidden === false);
-  ok("el form cargó el límite $10.000",
-    document.getElementById("admin-limite")?.value === "10000",
-    document.getElementById("admin-limite")?.value);
-  ok("el form cargó el regalo $1.000",
-    document.getElementById("admin-regalo")?.value === "1000",
-    document.getElementById("admin-regalo")?.value);
-  ok("el select de usuarios se llenó",
-    document.querySelectorAll("#admin-usuario option").length === 2,
-    String(document.querySelectorAll("#admin-usuario option").length));
-
-  document.getElementById("admin-limite").value = "20000";
-  document.getElementById("admin-regalo").value = "3000";
-  enviar(document.getElementById("admin-config-form"), window);
-  await esperar(600);
-
-  const status = document.getElementById("admin-status")?.textContent || "";
-  ok("confirma el cambio guardado",
-    status.includes("20.000") && status.includes("3.000"), status);
-
-  const verificacion = await consultar(`${BASE}/api/admin/config`);
-  ok("la regla quedó en $20.000 / $3.000 en el backend",
-    verificacion.datos?.config?.limite === 20000 && verificacion.datos?.config?.montoRegalo === 3000,
-    JSON.stringify(verificacion.datos?.config));
+  const simular = await consultar(`${BASE}/api/admin/simular`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ usuario_id: "usr_ana", monto: 3000 }),
+  });
+  ok("el admin puede simular saldo para un cliente", simular.status === 200,
+    `(${simular.status})`);
+  cookie = "";
 }
 
-seccion("Dejamos la regla como estaba");
+seccion("Login y panel se ocultan por atributo");
 {
-  await consultar(`${BASE}/api/admin/config`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ limite: 10000, montoRegalo: 1000, activa: true, reiniciarCiclo: true }),
-  });
-  const restaurado = await consultar(`${BASE}/api/admin/config`);
-  ok("la regla volvió a $10.000 / $1.000",
-    restaurado.datos?.config?.limite === 10000 && restaurado.datos?.config?.montoRegalo === 1000,
-    JSON.stringify(restaurado.datos?.config));
+  // Ojo: jsdom no reproduce el bug original (aplica la regla [hidden] del
+  // navegador pero no la precedencia contra las reglas de autor), así que
+  // acá solo se verifica el atributo. El guarda de verdad que evita que
+  // `hidden` deje de ocultar vive en tools/verificar-enlaces.mjs.
+  const { document, window } = cuenta;
+  const panel = document.getElementById("login-panel");
+  const cuentaPanel = document.getElementById("cuenta-panel");
+
+  ok("con sesión abierta el login queda marcado oculto", panel.hidden === true);
+  ok("con sesión abierta el panel de cuenta queda visible", cuentaPanel.hidden === false);
+
+  document.getElementById("logout-button").click();
+  await esperar(700);
+  ok("al cerrar sesión el login vuelve a estar visible", panel.hidden === false);
+  ok("al cerrar sesión el panel de cuenta se oculta", cuentaPanel.hidden === true);
 }
 
 seccion("Errores de consola");

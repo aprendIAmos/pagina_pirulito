@@ -6,7 +6,7 @@
  * ------------------------------------------------------------------ */
 
 import { api, formatearPrecio, formatearFecha } from "./api.js";
-import { initSesion, login, logout, refrescar, alCambiar, obtenerUsuario, esAdmin } from "./sesion.js";
+import { initSesion, login, logout, refrescar, alCambiar, obtenerUsuario } from "./sesion.js";
 import { activarMenuMovil, mostrarToast, escapar, pintarYear } from "./ui.js";
 
 const DEMO_PASSWORD = "pirulito123";
@@ -262,17 +262,12 @@ async function pintarCuenta() {
   pintarDescuentos(usuario.beneficios?.descuentos || []);
   pintarCupones(usuario.beneficios?.cupones || []);
 
-  const adminPanel = document.getElementById("admin-panel");
-  if (adminPanel) adminPanel.hidden = !esAdmin();
-
   try {
     const historial = await api.cuenta.historial();
     pintarHistorial(historial);
   } catch (error) {
     console.warn("[cuenta] no se pudo cargar el historial", error);
   }
-
-  if (esAdmin()) await cargarAdmin();
 }
 
 function mostrarLogin() {
@@ -305,106 +300,6 @@ function conectarCupon() {
       await pintarCuenta();
     } catch (err) {
       mostrarError(error, err.message);
-    }
-  });
-}
-
-/* -------------------------------- admin ------------------------------- */
-
-// cargarAdmin() se vuelve a llamar cada vez que se repinta el panel, así
-// que los listeners se registran una sola vez.
-let adminConectado = false;
-
-async function cargarAdmin() {
-  const form = document.getElementById("admin-config-form");
-  const selectUsuarios = document.getElementById("admin-usuario");
-
-  try {
-    const { config } = await api.admin.config();
-    const limite = document.getElementById("admin-limite");
-    const regalo = document.getElementById("admin-regalo");
-    const activa = document.getElementById("admin-activa");
-    const reinicia = document.getElementById("admin-reinicia");
-
-    if (limite) limite.value = config.limite;
-    if (regalo) regalo.value = config.montoRegalo;
-    if (activa) activa.checked = config.activa;
-    if (reinicia) reinicia.checked = config.reiniciarCiclo;
-
-    const { usuarios } = await api.admin.usuarios();
-    if (selectUsuarios) {
-      selectUsuarios.innerHTML = usuarios
-        .map(
-          (u) =>
-            `<option value="${escapar(u.id)}">${escapar(u.nombre)} · ${formatearPrecio(
-              u.cicloAcumulado,
-            )}</option>`,
-        )
-        .join("");
-    }
-  } catch (error) {
-    console.warn("[admin] no se pudo cargar la config", error);
-    return;
-  }
-
-  if (adminConectado) return;
-  adminConectado = true;
-
-  if (form) {
-    form.addEventListener("submit", async (evento) => {
-      evento.preventDefault();
-      const status = document.getElementById("admin-status");
-      const datos = new FormData(form);
-
-      try {
-        const { config } = await api.admin.actualizarConfig({
-          limite: Number(datos.get("limite")),
-          montoRegalo: Number(datos.get("montoRegalo")),
-          activa: datos.get("activa") === "on",
-          reiniciarCiclo: datos.get("reiniciarCiclo") === "on",
-        });
-        if (status) {
-          status.hidden = false;
-          status.textContent = `Guardado: ${formatearPrecio(config.limite)} → ${formatearPrecio(
-            config.montoRegalo,
-          )}.`;
-        }
-        mostrarToast("Regla actualizada para todos.", "ok");
-      } catch (error) {
-        if (status) {
-          status.hidden = false;
-          status.textContent = error.message;
-        }
-      }
-    });
-  }
-
-  const simularForm = document.getElementById("admin-simular-form");
-  simularForm?.addEventListener("submit", async (evento) => {
-    evento.preventDefault();
-    const datos = new FormData(simularForm);
-    const status = document.getElementById("admin-status");
-
-    try {
-      const { usuario, regalo } = await api.admin.simular(
-        String(datos.get("usuarioId")),
-        Number(datos.get("monto")),
-      );
-      const texto = regalo
-        ? `Sumaste y el cliente ganó ${formatearPrecio(regalo.monto)}.`
-        : `Ciclo ahora en ${formatearPrecio(usuario.cicloAcumulado)}.`;
-      if (status) {
-        status.hidden = false;
-        status.textContent = texto;
-      }
-      mostrarToast(texto, "ok");
-      await refrescar();
-      await pintarCuenta();
-    } catch (error) {
-      if (status) {
-        status.hidden = false;
-        status.textContent = error.message;
-      }
     }
   });
 }

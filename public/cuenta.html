@@ -208,56 +208,6 @@
               </div>
             </div>
           </section>
-
-          <!-- admin -->
-          <section class="admin-panel" id="admin-panel" hidden>
-            <p class="eyebrow"><span class="eyebrow-dot"></span> Panel del equipo</p>
-            <h2>Regla de acumulación</h2>
-            <p class="admin-lead">
-              Estos valores salen del backend. Los cambiás acá y todos los clientes los ven al
-              instante, sin redesplegar.
-            </p>
-
-            <form class="admin-form" id="admin-config-form">
-              <div class="field">
-                <label for="admin-limite">Límite (ARS)</label>
-                <input type="number" id="admin-limite" name="limite" min="0" step="500" />
-              </div>
-              <div class="field">
-                <label for="admin-regalo">Monto de regalo (ARS)</label>
-                <input type="number" id="admin-regalo" name="montoRegalo" min="0" step="100" />
-              </div>
-              <div class="field field-check">
-                <input type="checkbox" id="admin-activa" name="activa" />
-                <label for="admin-activa">Regla activa</label>
-              </div>
-              <div class="field field-check">
-                <input type="checkbox" id="admin-reinicia" name="reiniciarCiclo" />
-                <label for="admin-reinicia">Reiniciar el ciclo al otorgar</label>
-              </div>
-              <button class="button button-primary" type="submit">Guardar cambios</button>
-              <p class="form-status" id="admin-status" role="status" hidden></p>
-            </form>
-
-            <div class="admin-simular">
-              <h3>Probar sin comprar</h3>
-              <p>
-                Sumá saldo al ciclo de un cliente para ver cómo se comporta el umbral sin llenar
-                el historial de compras.
-              </p>
-              <form class="admin-form" id="admin-simular-form">
-                <div class="field">
-                  <label class="visually-hidden" for="admin-usuario">Cliente</label>
-                  <select id="admin-usuario" name="usuarioId"></select>
-                </div>
-                <div class="field">
-                  <label class="visually-hidden" for="admin-monto">Monto</label>
-                  <input type="number" id="admin-monto" name="monto" min="1" step="500" value="5000" />
-                </div>
-                <button class="button button-outline" type="submit">Sumar al ciclo</button>
-              </form>
-            </div>
-          </section>
         </section>
       </div>
     </main>

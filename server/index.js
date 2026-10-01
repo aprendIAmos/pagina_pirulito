@@ -20,6 +20,7 @@ import catalogoRoutes from "./routes/catalogo.routes.js";
 import comprasRoutes from "./routes/compras.routes.js";
 import cuentaRoutes from "./routes/cuenta.routes.js";
 import adminRoutes from "./routes/admin.routes.js";
+import devRoutes from "./routes/dev.routes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, "..", "public");
@@ -68,6 +69,11 @@ app.use("/api/productos", catalogoRoutes);
 app.use("/api/compras", comprasRoutes);
 app.use("/api/cuenta", cuentaRoutes);
 app.use("/api/admin", adminRoutes);
+
+// Utilidades de desarrollo: no se montan en producción.
+if (!config.isProduction) {
+  app.use("/api/dev", devRoutes);
+}
 
 // Cualquier otra ruta de API que no exista responde JSON, no el index.
 app.use("/api", (_req, _res, next) => {

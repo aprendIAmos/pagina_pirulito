@@ -60,6 +60,8 @@ function crearCliente() {
 /* ------------------------------------------------------------------ */
 
 const ana = crearCliente();
+// El panel de admin se retiró de la pantalla, pero las rutas /api/admin
+// siguen en pie: se prueban acá para no perder cobertura.
 const admin = crearCliente();
 
 /**
@@ -68,20 +70,17 @@ const admin = crearCliente();
  * disponible (por ejemplo contra Supabase) seguimos con el estado actual.
  */
 async function reiniciarDatosMock() {
-  await admin("/api/auth/login", {
-    metodo: "POST",
-    cuerpo: { usuario: "admin", password: PASSWORD },
-  });
-  const { status } = await admin("/api/admin/reiniciar-datos", { metodo: "POST" });
+  const { status } = await ana("/api/dev/reiniciar", { metodo: "POST" });
   if (status !== 200) {
     console.warn("[aviso] no se pudieron reiniciar los datos; la prueba arranca con el estado actual.");
   }
+  return status === 200;
 }
 
 seccion("Reinicio de datos");
 {
-  await reiniciarDatosMock();
-  ok("los datos mock volvieron al estado inicial", true);
+  const okReset = await reiniciarDatosMock();
+  ok("los datos mock volvieron al estado inicial", okReset);
 }
 
 seccion("Health y catálogo");
@@ -206,7 +205,7 @@ seccion("Historial y cupones");
   ok("cupón inexistente devuelve 404", falso.status === 404, `(${falso.status})`);
 }
 
-seccion("Permisos de admin");
+seccion("Rutas de admin (sin pantalla, pero con backend)");
 {
   const prohibido = await ana("/api/admin/config");
   ok("un cliente no entra al panel (403)", prohibido.status === 403, `(${prohibido.status})`);

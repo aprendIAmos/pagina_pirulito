@@ -116,10 +116,6 @@ export function estaLogueado() {
   return Boolean(usuario);
 }
 
-export function esAdmin() {
-  return usuario?.rol === "admin";
-}
-
 export function alCambiar(fn) {
   suscriptores.add(fn);
   return () => suscriptores.delete(fn);

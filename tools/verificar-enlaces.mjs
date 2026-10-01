@@ -76,6 +76,31 @@ for (const pagina of paginas) {
   }
 }
 
+/* ------------------------------------------------------------------ *
+ * Guarda de CSS
+ *
+ * El atributo hidden depende de la regla [hidden] { display: none } del
+ * navegador, a la que cualquier `display` de autor le gana. Ya pasó: al
+ * login le ganaba .login-panel { display: grid } y la pantalla se quedaba
+ * pegada. Esta guarda falla si alguien saca el [hidden] global.
+ * ------------------------------------------------------------------ */
+
+console.log("\nstyles.css");
+
+{
+  const css = readFileSync(path.join(publicDir, "styles.css"), "utf8");
+  const guarda = /\[hidden\]\s*\{[^}]*display:\s*none\s*!important/s.exec(css);
+
+  revisados += 1;
+  if (!guarda) {
+    fallos.push(
+      "styles.css: falta la regla global [hidden] { display: none !important }, sin ella los paneles con display propio no se ocultan",
+    );
+  } else {
+    console.log("  ok   [hidden] fuerza display: none");
+  }
+}
+
 console.log(`\n${revisados - fallos.length}/${revisados} comprobaciones OK.`);
 if (fallos.length) {
   console.error("\nProblemas:");

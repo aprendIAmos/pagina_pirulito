@@ -25,7 +25,7 @@ Para desarrollo con recarga automática: `npm run dev`.
 | usuario | contraseña | rol | qué puede hacer |
 | --- | --- | --- | --- |
 | `ana` | `pirulito123` | cliente | comprar, ver saldos, aplicar cupones |
-| `admin` | `pirulito123` | admin | lo mismo, más cambiar la regla y simular saldo |
+| `admin` | `pirulito123` | admin | lo mismo; las rutas `/api/admin/*` existen pero sin pantalla |
 
 `ana` arranca con $7.000 acumulados y el límite es de $10.000, así que la
 primera compra dispara el regalo y se puede ver el circuito completo sin
@@ -38,8 +38,9 @@ comprar 34 porciones.
 - Al llegar al límite se acredita saldo a favor y el ciclo reinicia.
 - El excedente no se pierde: si comprás $12.000 con límite de $10.000, el
   ciclo queda en $2.000.
-- El límite y el monto del regalo se cambian desde el panel de admin, sin
-  tocar código ni redesplegar.
+- La regla se cambia por API (`PATCH /api/admin/config`). No hay panel en
+  pantalla: mientras tanto se edita `server/mock/config.js` y se reinicia el
+  server, porque los datos están en memoria.
 
 ## Estructura
 
@@ -49,14 +50,14 @@ server/
   config.js         carga de .env
   auth.js           JWT en cookie httpOnly + middlewares de sesión y rol
   errors.js         ApiError y asyncHandler
-  routes/           auth, catalogo, compras, cuenta, admin
+  routes/           auth, catalogo, compras, cuenta, admin, dev
   data/
     index.js        elige el proveedor de datos
     mock.js         implementación en memoria
   mock/             los datos de prueba y la regla de acumulación
 public/
   index.html        portada
-  cuenta.html       login, saldos, beneficios, historial, panel admin
+  cuenta.html       login, saldos, beneficios e historial
   styles.css
   js/
     app.js          entrypoint del inicio
@@ -83,9 +84,13 @@ tools/              scripts de prueba
 | `POST` | `/api/cuenta/cupones/:codigo/aplicar` | sí | canjea un cupón |
 | `GET` | `/api/admin/config` | admin | lee la regla |
 | `PATCH` | `/api/admin/config` | admin | cambia límite y monto de regalo |
-| `GET` | `/api/admin/usuarios` | admin | lista para el selector del panel |
+| `GET` | `/api/admin/usuarios` | admin | lista usuarios con sus saldos |
 | `POST` | `/api/admin/simular` | admin | suma saldo sin comprar |
-| `POST` | `/api/admin/reiniciar-datos` | admin | solo en desarrollo, vuelve los datos mock al inicio |
+| `POST` | `/api/dev/reiniciar` | no | solo en desarrollo, vuelve los datos mock al inicio |
+
+Las rutas de `/api/admin` quedan sin pantalla a propósito: son la parte que,
+con Supabase, va a escribir la regla en la base. `/api/dev` no se monta si
+`NODE_ENV=production`.
 
 ## Pruebas
 
@@ -93,18 +98,27 @@ Con el server corriendo en otra terminal:
 
 ```bash
 npm test              # las tres suites
-npm run test:enlaces  # HTML ↔ JS ↔ archivos
+npm run test:enlaces  # HTML ↔ JS ↔ archivos, y la guarda de [hidden]
 npm run test:api      # endpoints, auth, regla de acumulación, permisos
-npm run test:frontend # catálogo, login, saldos y panel con jsdom
+npm run test:frontend # catálogo, login, saldos e historial con jsdom
 ```
+
+Las tres usan `POST /api/dev/reiniciar` para partir del estado inicial, así
+que no dependen del orden en que se corran.
 
 ## Personalización
 
 - **WhatsApp:** número y mensaje por defecto al inicio de `public/js/app.js`.
 - **Productos:** hoy están en `server/mock/productos.js` (precio, foto,
   categoría). Con la base conectada van a ser filas.
+- **Regla de acumulación:** `server/mock/config.js` (límite, monto de regalo).
 - **Colores y estilos:** variables CSS al principio de `public/styles.css`.
 - **Fotos:** son de muestra (Unsplash), conviene reemplazarlas.
+
+> Si agregás un panel que se muestra y se oculta con el atributo `hidden`,
+> mantené la regla global `[hidden] { display: none !important }` de
+> `styles.css`. Sin ella, cualquier `display` que le pongas a la clase gana
+> y el elemento no se oculta: ya pasó con el login.
 
 ## Próximo paso: Supabase
 

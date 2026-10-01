@@ -75,18 +75,6 @@ export const api = {
         method: "POST",
       }),
   },
-
-  admin: {
-    config: () => request("/api/admin/config"),
-    actualizarConfig: (cambios) =>
-      request("/api/admin/config", { method: "PATCH", body: cambios }),
-    usuarios: () => request("/api/admin/usuarios"),
-    simular: (usuarioId, monto) =>
-      request("/api/admin/simular", {
-        method: "POST",
-        body: { usuario_id: usuarioId, monto },
-      }),
-  },
 };
 
 /* ----------------------------- formateo ------------------------------- */
