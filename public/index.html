@@ -56,6 +56,7 @@
           <a href="#catalogo">Catálogo</a>
           <a href="#como-pedir">Cómo pedir</a>
           <a href="#contacto">Contacto</a>
+          <a href="cuenta.html" class="nav-cuenta" data-nav-cuenta>Mi cuenta</a>
           <a
             class="nav-whatsapp"
             target="_blank"
@@ -193,115 +194,11 @@
           </div>
           <p class="visually-hidden" role="status" id="filter-status"></p>
 
-          <div class="product-grid">
-            <article class="product-card reveal" data-category="chocolate">
-              <div class="product-image">
-                <img
-                  src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?auto=format&amp;fit=crop&amp;w=600&amp;q=85"
-                  alt="Chocotorta de chocolate en una porción"
-                  loading="lazy"
-                />
-                <span class="product-badge">Más pedido</span>
-                <span class="product-emoji" aria-hidden="true">♡</span>
-              </div>
-              <div class="product-body">
-                <div class="product-meta"><span>Chocolate</span><span>Porción individual</span></div>
-                <h3>Chocotorta</h3>
-                <p>Galletitas de chocolate, dulce de leche y una cremosidad que invita a darle otro bocado.</p>
-                <div class="product-footer">
-                  <span class="product-price" data-price="3000">$3.000</span>
-                  <a
-                    class="product-order"
-                    target="_blank"
-                    rel="noreferrer"
-                    data-product="Chocotorta"
-                    aria-label="Pedir Chocotorta por WhatsApp"
-                  >Pedir <span aria-hidden="true">↗</span></a>
-                </div>
-              </div>
-            </article>
-
-            <article class="product-card reveal reveal-delay-1" data-category="citrico">
-              <div class="product-image">
-                <img
-                  src="https://images.unsplash.com/photo-1519915028121-7d3463d20b13?auto=format&amp;fit=crop&amp;w=600&amp;q=85"
-                  alt="Lemon pie recién servido"
-                  loading="lazy"
-                />
-                <span class="product-badge product-badge-light">Fresco y ácido</span>
-                <span class="product-emoji" aria-hidden="true">✦</span>
-              </div>
-              <div class="product-body">
-                <div class="product-meta"><span>Cítrico</span><span>Porción individual</span></div>
-                <h3>Lemon Pie</h3>
-                <p>Masa crocante, relleno cremoso y un toque cítrico para cerrar el día con algo liviano.</p>
-                <div class="product-footer">
-                  <span class="product-price" data-price="3000">$3.000</span>
-                  <a
-                    class="product-order"
-                    target="_blank"
-                    rel="noreferrer"
-                    data-product="Lemon Pie"
-                    aria-label="Pedir Lemon Pie por WhatsApp"
-                  >Pedir <span aria-hidden="true">↗</span></a>
-                </div>
-              </div>
-            </article>
-
-            <article class="product-card reveal reveal-delay-2" data-category="cremoso">
-              <div class="product-image">
-                <img
-                  src="https://images.unsplash.com/photo-1533134242443-d4fd215305ad?auto=format&amp;fit=crop&amp;w=600&amp;q=85"
-                  alt="Cheesecake cremoso decorado"
-                  loading="lazy"
-                />
-                <span class="product-badge product-badge-light">Suave y cremoso</span>
-                <span class="product-emoji" aria-hidden="true">♡</span>
-              </div>
-              <div class="product-body">
-                <div class="product-meta"><span>Cremoso</span><span>Porción individual</span></div>
-                <h3>Cheesecake</h3>
-                <p>Textura suave, cremosa y un equilibrio dulce-acidez para disfrutar sin apuro.</p>
-                <div class="product-footer">
-                  <span class="product-price" data-price="3000">$3.000</span>
-                  <a
-                    class="product-order"
-                    target="_blank"
-                    rel="noreferrer"
-                    data-product="Cheesecake"
-                    aria-label="Pedir Cheesecake por WhatsApp"
-                  >Pedir <span aria-hidden="true">↗</span></a>
-                </div>
-              </div>
-            </article>
-
-            <article class="product-card reveal reveal-delay-3" data-category="cremoso">
-              <div class="product-image">
-                <img
-                  src="https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?auto=format&amp;fit=crop&amp;w=600&amp;q=85"
-                  alt="Tiramisú de café con cacao"
-                  loading="lazy"
-                />
-                <span class="product-badge product-badge-light">Para amantes del café</span>
-                <span class="product-emoji" aria-hidden="true">✦</span>
-              </div>
-              <div class="product-body">
-                <div class="product-meta"><span>Café</span><span>Porción individual</span></div>
-                <h3>Tiramisú</h3>
-                <p>Capas de bizcocho, café y crema con ese toque de cacao que nunca sobra.</p>
-                <div class="product-footer">
-                  <span class="product-price" data-price="3000">$3.000</span>
-                  <a
-                    class="product-order"
-                    target="_blank"
-                    rel="noreferrer"
-                    data-product="Tiramisú"
-                    aria-label="Pedir Tiramisú por WhatsApp"
-                  >Pedir <span aria-hidden="true">↗</span></a>
-                </div>
-              </div>
-            </article>
-          </div>
+          <div class="product-grid" id="catalogo-grid"></div>
+          <p class="catalog-empty" id="catalogo-vacio" hidden role="status">
+            <strong>Estamos acomodando la vitrina.</strong>
+            <span>Mientras tanto escribinos por WhatsApp y te atendemos al toque.</span>
+          </p>
         </div>
       </section>
 
@@ -421,6 +318,30 @@
       </div>
     </footer>
 
+    <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+    <div
+      class="gift-overlay"
+      id="gift-overlay"
+      hidden
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="gift-title"
+    >
+      <div class="gift-card">
+        <span class="gift-spark gift-spark-one" aria-hidden="true">✦</span>
+        <span class="gift-spark gift-spark-two" aria-hidden="true">✿</span>
+        <p class="eyebrow"><span class="eyebrow-dot"></span> Regalo desbloqueado</p>
+        <h2 id="gift-title">¡Te acreditamos<br /><em>saldo a favor!</em></h2>
+        <p class="gift-monto" id="gift-monto">$0</p>
+        <p class="gift-texto" id="gift-texto"></p>
+        <div class="gift-actions">
+          <a class="button button-primary" href="cuenta.html">Ver mi cuenta</a>
+          <button class="button button-outline" type="button" data-gift-cerrar>Seguir comprando</button>
+        </div>
+      </div>
+    </div>
+
     <a
       class="floating-whatsapp"
       target="_blank"
@@ -434,6 +355,6 @@
       <span>Escribinos</span>
     </a>
 
-    <script src="script.js" defer></script>
+    <script type="module" src="js/app.js"></script>
   </body>
 </html>

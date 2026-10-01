@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="es-AR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fff8f1" />
+    <meta
+      name="description"
+      content="Tu cuenta en Pirulito: saldo a favor, promos, descuentos y cupones."
+    />
+    <title>Mi cuenta · Pirulito</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23e77d78'/%3E%3Cpath d='M18 39c0-10 6-17 14-17s14 7 14 17c0 8-6 13-14 13s-14-5-14-13Z' fill='%23fff8f1'/%3E%3Ccircle cx='46' cy='16' r='5' fill='%23732c43'/%3E%3C/svg%3E" />
+    <link rel="stylesheet" href="styles.css" />
+    <script>document.documentElement.classList.add("js");</script>
+  </head>
+
+  <body class="page-cuenta">
+    <div class="page-wash" aria-hidden="true"></div>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="index.html" aria-label="Pirulito, volver al inicio">
+          <span class="brand-mark" aria-hidden="true"><span>p</span></span>
+          <span class="brand-name">pirulito<span class="brand-dot">.</span></span>
+        </a>
+
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="primary-nav"
+          aria-label="Abrir menú"
+        >
+          <span></span><span></span><span></span>
+        </button>
+
+        <nav class="primary-nav" id="primary-nav" aria-label="Navegación principal">
+          <a href="index.html">Inicio</a>
+          <a href="index.html#catalogo">Catálogo</a>
+          <a href="index.html#como-pedir">Cómo pedir</a>
+          <a href="index.html#contacto">Contacto</a>
+          <a href="cuenta.html" class="nav-cuenta is-active">Mi cuenta</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="section-pad">
+      <div class="container">
+        <!-- ------------------------------ login ------------------------------ -->
+        <section class="login-panel" id="login-panel" hidden>
+          <div class="login-card">
+            <p class="eyebrow"><span class="eyebrow-dot"></span> Bienvenida de vuelta</p>
+            <h1 class="login-title">Entrá a tu <em>cuenta.</em></h1>
+            <p class="login-lead">
+              Acumulá tus compras, mirá cuánto te falta para tu regalo y usá tus cupones.
+            </p>
+
+            <form class="login-form" id="login-form" novalidate>
+              <div class="field">
+                <label for="login-usuario">Usuario</label>
+                <input
+                  type="text"
+                  id="login-usuario"
+                  name="usuario"
+                  autocomplete="username"
+                  placeholder="ana"
+                  required
+                />
+              </div>
+
+              <div class="field">
+                <label for="login-password">Contraseña</label>
+                <input
+                  type="password"
+                  id="login-password"
+                  name="password"
+                  autocomplete="current-password"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+
+              <p class="form-error" id="login-error" role="alert" hidden></p>
+
+              <button class="button button-primary button-block" type="submit" id="login-submit">
+                <span>Entrar</span>
+                <svg aria-hidden="true" viewBox="0 0 24 24">
+                  <path d="M5 12h13M13 6l6 6-6 6" />
+                </svg>
+              </button>
+            </form>
+
+            <div class="login-demo">
+              <p class="login-demo-title">Usuarios de prueba</p>
+              <button class="demo-chip" type="button" data-demo="ana">
+                <strong>ana</strong>
+                <small>cliente · $7.000 acumulado</small>
+              </button>
+              <button class="demo-chip" type="button" data-demo="admin">
+                <strong>admin</strong>
+                <small>equipo · panel de reglas</small>
+              </button>
+              <p class="login-demo-note">Contraseña para los dos: <code>pirulito123</code></p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ------------------------------ panel ------------------------------ -->
+        <section class="cuenta-panel" id="cuenta-panel" hidden>
+          <div class="cuenta-head">
+            <div>
+              <p class="eyebrow"><span class="eyebrow-dot"></span> Tu cuenta</p>
+              <h1>Hola, <em id="cuenta-nombre">—</em></h1>
+              <p class="cuenta-sub" id="cuenta-email">—</p>
+            </div>
+            <div class="cuenta-head-actions">
+              <a class="button button-outline" href="index.html#catalogo">Seguir comprando</a>
+              <button class="button button-ghost" type="button" id="logout-button">Salir</button>
+            </div>
+          </div>
+
+          <!-- saldos -->
+          <div class="saldo-grid">
+            <article class="saldo-card saldo-card-main">
+              <span class="saldo-label">Saldo a favor</span>
+              <strong class="saldo-valor" id="saldo-favor">$0</strong>
+              <small>Lo usás cuando quieras en tu próximo pedido.</small>
+            </article>
+
+            <article class="saldo-card">
+              <span class="saldo-label">Compras acumuladas</span>
+              <strong class="saldo-valor" id="saldo-ciclo">$0</strong>
+              <div class="progress" role="img" aria-label="Progreso hacia el regalo">
+                <span class="progress-bar" id="progreso-bar" style="width: 0%"></span>
+              </div>
+              <small id="saldo-progreso-texto">—</small>
+            </article>
+
+            <article class="saldo-card">
+              <span class="saldo-label">Porciones compradas</span>
+              <strong class="saldo-valor" id="saldo-total">0</strong>
+              <small id="saldo-regla">—</small>
+            </article>
+          </div>
+
+          <!-- beneficios -->
+          <div class="beneficios-grid">
+            <section class="beneficio-col">
+              <h2>Promos</h2>
+              <div id="lista-promos" class="lista-beneficios"></div>
+            </section>
+
+            <section class="beneficio-col">
+              <h2>Descuentos</h2>
+              <div id="lista-descuentos" class="lista-beneficios"></div>
+            </section>
+
+            <section class="beneficio-col">
+              <h2>Cupones</h2>
+              <div id="lista-cupones" class="lista-beneficios"></div>
+            </section>
+          </div>
+
+          <!-- canjear cupón -->
+          <section class="cupon-form-card">
+            <div>
+              <h2>¿Tenés un código?</h2>
+              <p>Aplicá un cupón y te lo guardamos en tu cuenta.</p>
+            </div>
+            <form class="cupon-form" id="cupon-form" novalidate>
+              <div class="field">
+                <label class="visually-hidden" for="cupon-codigo">Código del cupón</label>
+                <input
+                  type="text"
+                  id="cupon-codigo"
+                  name="codigo"
+                  placeholder="MENOS10"
+                  autocomplete="off"
+                  required
+                />
+              </div>
+              <button class="button button-primary" type="submit">Aplicar</button>
+            </form>
+            <p class="form-error" id="cupon-error" role="alert" hidden></p>
+          </section>
+
+          <!-- historial -->
+          <section class="historial-col">
+            <h2>Tu historial</h2>
+            <div class="historial-grid">
+              <div>
+                <h3>Compras</h3>
+                <div id="lista-compras" class="lista-historial"></div>
+              </div>
+              <div>
+                <h3>Regalos</h3>
+                <div id="lista-regalos" class="lista-historial"></div>
+              </div>
+              <div>
+                <h3>Cupones usados</h3>
+                <div id="lista-canjes" class="lista-historial"></div>
+              </div>
+            </div>
+          </section>
+
+          <!-- admin -->
+          <section class="admin-panel" id="admin-panel" hidden>
+            <p class="eyebrow"><span class="eyebrow-dot"></span> Panel del equipo</p>
+            <h2>Regla de acumulación</h2>
+            <p class="admin-lead">
+              Estos valores salen del backend. Los cambiás acá y todos los clientes los ven al
+              instante, sin redesplegar.
+            </p>
+
+            <form class="admin-form" id="admin-config-form">
+              <div class="field">
+                <label for="admin-limite">Límite (ARS)</label>
+                <input type="number" id="admin-limite" name="limite" min="0" step="500" />
+              </div>
+              <div class="field">
+                <label for="admin-regalo">Monto de regalo (ARS)</label>
+                <input type="number" id="admin-regalo" name="montoRegalo" min="0" step="100" />
+              </div>
+              <div class="field field-check">
+                <input type="checkbox" id="admin-activa" name="activa" />
+                <label for="admin-activa">Regla activa</label>
+              </div>
+              <div class="field field-check">
+                <input type="checkbox" id="admin-reinicia" name="reiniciarCiclo" />
+                <label for="admin-reinicia">Reiniciar el ciclo al otorgar</label>
+              </div>
+              <button class="button button-primary" type="submit">Guardar cambios</button>
+              <p class="form-status" id="admin-status" role="status" hidden></p>
+            </form>
+
+            <div class="admin-simular">
+              <h3>Probar sin comprar</h3>
+              <p>
+                Sumá saldo al ciclo de un cliente para ver cómo se comporta el umbral sin llenar
+                el historial de compras.
+              </p>
+              <form class="admin-form" id="admin-simular-form">
+                <div class="field">
+                  <label class="visually-hidden" for="admin-usuario">Cliente</label>
+                  <select id="admin-usuario" name="usuarioId"></select>
+                </div>
+                <div class="field">
+                  <label class="visually-hidden" for="admin-monto">Monto</label>
+                  <input type="number" id="admin-monto" name="monto" min="1" step="500" value="5000" />
+                </div>
+                <button class="button button-outline" type="submit">Sumar al ciclo</button>
+              </form>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <a class="brand footer-brand" href="index.html">
+          <span class="brand-mark" aria-hidden="true"><span>p</span></span>
+          <span class="brand-name">pirulito<span class="brand-dot">.</span></span>
+        </a>
+        <p>Postres para compartir, momentos para recordar.</p>
+        <p class="footer-small">© <span data-year></span> Pirulito · CABA y GBA</p>
+      </div>
+    </footer>
+
+    <div class="toast-stack" id="toast-stack" aria-live="polite" aria-atomic="true"></div>
+
+    <script type="module" src="js/cuenta.js"></script>
+  </body>
+</html>
